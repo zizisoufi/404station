@@ -47,11 +47,11 @@ class Panel:
             i = input("Mikhay Koja Beri?")
 
             if i == "1":
-                pass
+                self.add_employer()
             elif i == "2":
-                pass
+                self.remove_employer()
             elif i == "3":
-                pass
+                self.show_employer()
             elif i == "4":
                 return
             else
