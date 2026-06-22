@@ -57,5 +57,24 @@ class Panel:
             else
                 print("Dari Eshatebah Mizani Dadash")
 
+        def add_employer(self):
+            print("\nAdd employer")
 
+            username = input("Username: ")
+            password = input("Password: ")
 
+            #Check Validation and Append to employe list
+
+        def remove_employer(self):
+            username = input("Enter employer who we should remove")
+            
+            # chek if exist(if exist can be a method) remove from list
+
+        def show_employer(self):
+            if len() == 0:
+                print("user nout found")
+                return
+            
+            #for on employer
+
+# we can write some metohd like if username exist and others 
