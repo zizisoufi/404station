@@ -34,13 +34,13 @@ class Authentication:
     #get user:Admin|Employer|Passenger and append to her list    
     def rigester(self, user) -> bool:
         if isinstance(user, Admin_User):
-            self.admin.append(user)
+            self.admins.append(user)
             return True
         elif isinstance(user,Employer):
-            self.employer.append(user)
+            self.employers.append(user)
             return True
         elif isinstance(user, Passenger):
-            self.passenger.append(user)
+            self.passengers.append(user)
             return True
         else:
             return False
@@ -52,20 +52,17 @@ class Authentication:
             for i in self.admins :
                 if i.username == username and i.password == password:
                     return True      
-                else:
-                    return False
+            return False
         elif role == 'employer':
             for i in self.employers:
                 if i.username == username and i.password == password:
                     return True      
-                else:
-                    return False
+            return False
         elif role == 'passenger':
             for i in self.passengers:
                 if i.username == username and i.password == password:
                     return True      
-                else:
-                    return False
+            return False
         else:
             return False
         
