@@ -13,7 +13,7 @@ class Panel:
             i = input("Mikhay Koja Beri?")
 
             if i == "1":
-                pass
+                self.admin_login_panel()
             elif i == "2":
                 pass
             elif i == "3":
@@ -35,6 +35,9 @@ class Panel:
                 #pass auth class or db class 
                 
                 #check user and password validation
+
+            # if validate succesfully
+            self.admin_panel()
 
         def admin_panel(self):
             while True:
