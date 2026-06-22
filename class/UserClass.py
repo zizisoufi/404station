@@ -20,6 +20,49 @@ class Passenger(User):
         
         
         
+        
+        
+class Authentication:
+    def __init__(self):
+        self.admin = []
+        self.employer = []    
+        self.passenger = []
+        
+        
+    def rigester(self, user) -> bool:
+        if isinstance(user, Admin_User):
+            self.admin.append(user)
+            return True
+        elif isinstance(user,Employer):
+            self.employer.append(user)
+            return True
+        elif isinstance(user, Passenger):
+            self.passenger.append(user)
+            return True
+        else:
+            return False
+            
+        
+        
+    def login(self, username:str, password:str ) -> bool:
+        for i in self.users :
+            if username in i and password in i :
+                return True      
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
         
         
