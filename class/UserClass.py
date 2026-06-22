@@ -1,34 +1,33 @@
 class User:
-    def __init__(self, username: str, password:str):
+    def __init__(self, username: str, password:str,role):
         self.username = username
         self.password = password 
-        
+        self.role = role 
         
 class Admin_User(User):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,username,password,):
+        super().__init__(username,password,"admin")
         
         
 class Employer(User):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,username,password):
+        super().__init__(username,password,"employer")
         
         
 class Passenger(User):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,username,password):
+        super().__init__(username,password,"passenger")
         
         
         
-        
-        
+#create authentication class for 
 class Authentication:
     def __init__(self):
-        self.admin = []
-        self.employer = []    
-        self.passenger = []
+        self.admins = []
+        self.employers = []    
+        self.passengers = []
         
-        
+    #get user:Admin|Employer|Passenger and append to her list    
     def rigester(self, user) -> bool:
         if isinstance(user, Admin_User):
             self.admin.append(user)
@@ -43,11 +42,28 @@ class Authentication:
             return False
             
         
-        
-    def login(self, username:str, password:str ) -> bool:
-        for i in self.users :
-            if username in i and password in i :
-                return True      
+    #get username,password,role and check its availability in the list   
+    def login(self, username:str, password:str,role ) -> bool:
+        if role == 'admin':
+            for i in self.admins :
+                if i.username == username and i.password == password:
+                    return True      
+                else:
+                    return False
+        elif role == 'employer':
+            for i in self.employers:
+                if i.username == username and i.password == password:
+                    return True      
+                else:
+                    return False
+        elif role == 'passenger':
+            for i in self.passengers:
+                if i.username == username and i.password == password:
+                    return True      
+                else:
+                    return False
+        else:
+            return False
         
     
         
@@ -86,21 +102,10 @@ class Authentication:
         
         
         
-        # self.users = []
-        
-        
-        
-        
-    # def login(self, username:str, password:str ) -> bool:
-    #     for i in self.users :
-    #         if username in i and password in i :
-    #             return True
-            
     # def get_info(self) -> str :
     #     """
     #     show basic information 
 
     #     """
     #     return f"Name : {self.username} |  " 
-             
         
