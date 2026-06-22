@@ -10,8 +10,11 @@ class Admin_User(User):
         
         
 class Employer(User):
-    def __init__(self,username,password):
+    def __init__(self,username,password,first_name,last_name,email):
         super().__init__(username,password,"employer")
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
         
         
 class Passenger(User):
