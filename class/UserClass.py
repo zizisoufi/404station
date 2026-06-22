@@ -20,7 +20,7 @@ class Passenger(User):
         
         
         
-#create authentication class for 
+#create authentication class To prevent code duplication
 class Authentication:
     def __init__(self):
         self.admins = []
