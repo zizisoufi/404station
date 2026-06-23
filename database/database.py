@@ -1,4 +1,4 @@
-class DataBace:
+class DataBase:
     #every array saves a instance of an class
     def __init__(self):
         self.admins = []
@@ -18,12 +18,25 @@ class DataBace:
     def read_all_data(self, arrayname):
         return getattr(self,arrayname)
     
-    def read(self):
-        pass
+    def read(self, arrayname, pointer):
+        key = "username"
+        array = getattr(self, arrayname)
+        match arrayname:
+            case "trains":
+                key ="id"
+            case "lines":
+                 key = "name"
+        
+        for i in array:
+            if getattr(i, key) == pointer:
+                return i
+        return False
+                 
+        
         
     #here we update the desired info    
     def update_data(self, arrayname, pointer ,attr, new_value): 
-        array = getattr(self,arrayname,)
+        array = getattr(self,arrayname)
 
         key = "username"
         
@@ -35,8 +48,12 @@ class DataBace:
         #itrating in our array and looking for the attribute to change and upd––– the value of the new attribute(with Error handling)
         try:
             for i in array:
-                if i.key == pointer:
-                    i.attr = new_value
+                if getattr(i,key) == pointer:
+                    updated_obj = setattr(i, attr, new_value)
+                    return updated_obj
+            return False
+            
+
 
 
         except AttributeError :
@@ -63,7 +80,7 @@ class DataBace:
             # here we looking for an attr in our desired array   
             array = getattr(self,arrayname)
             for i in array:
-                if i.key == attr:
+                if getattr(i, key) == attr:
                     array.remove(i)
                     return True
             return False       
