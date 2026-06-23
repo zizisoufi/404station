@@ -34,6 +34,8 @@ class Panel:
             else:
                 print("Dari Eshatebah Mizani Dadash")
 
+    # Admin
+
     def admin_login_panel(self):
         while True:
             print("\nAdmin Login")
@@ -92,7 +94,6 @@ class Panel:
 
         print(f"Employer {username} with {password} is created ")
 
-
     def remove_employer(self):
         username = input("Enter employer username: ")
 
@@ -117,3 +118,56 @@ class Panel:
             print("username: ", employer.username)
             print("name: ", employer.first_name, employer.last_name)
             print("username: ", employer.email)
+
+    # Employer
+
+    def employer_login_panel(self):
+        while True:
+            print("\employer Login")
+
+            username = input("username: ")
+            password = input("password: ")
+
+            if self.auth.login(username, password, "employer"):
+                print("employer login succesfull.")
+                self.employer_panel()
+            else:
+                print("username or password is wrong")
+
+    def employer_panel(self):
+        while True:
+            print("\nPanel employer")
+            print("1. Add Line")
+            print("2. Update Line")
+            print("3. Delete Line")
+            print("4. Show Line")
+            print("5. Add Train")
+            print("6. Update Train")
+            print("7. Delete Train")
+            print("8. Show Train")
+            print("9. Sign Out")
+
+            
+
+            i = input("Mikhay Koja Beri? ")
+
+            if i == "1":
+                pass
+            elif i == "2":
+                pass
+            elif i == "3":
+                pass
+            elif i == "4":
+                pass
+            elif i == "5":
+              pass
+            elif i == "6":
+                pass
+            elif i == "7":
+                pass
+            elif i == "8":
+                pass
+            elif i == "9":
+                return
+            else:
+                print("Dari Eshatebah Mizani Dadash")
