@@ -7,4 +7,6 @@ class Train:
         self.quality = quality
         self.ticket_cost= ticket_cost
         self.capacity = capacity
+    def __str__(self):
+        return f"Name: {self.name}\nLine: {self.line}\nAvarage_speed: {self.avarage_speed}\nQuality: {self.quality}\nticket_cost: {self.ticket_cost}\nCapacity: {self.capacity}\n"
 
