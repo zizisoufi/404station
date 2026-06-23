@@ -105,3 +105,15 @@ class Panel:
             print("Employer is removed")
         else:
             print("username not found")
+    
+    def show_employer(self):
+        employers = self.db.read_all_data("employers")
+        if len(employers) == 0:
+            print("we don`t have employer yet")
+            return
+        
+        for employer in employers:
+            print("-------------------")
+            print("username: ", employer.username)
+            print("name: ", employer.first_name, employer.last_name)
+            print("username: ", employer.email)
