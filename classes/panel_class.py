@@ -94,15 +94,14 @@ class Panel:
 
 
     def remove_employer(self):
-        username = input("Enter employer who we should remove")
-        
-        # chek if exist(if exist can be a method) remove from list
+        username = input("Enter employer username: ")
 
-    def show_employer(self):
-        if len == 0:
-            print("user nout found")
-            return
+        employer = self.db.read("employers", username)
         
-        #for on employer
-
-# we can write some metohd like if username exist and others 
+        #check red method if return use remove data method to delete
+        if employer:
+            self.db.remove_data("employers", "username")
+            self.auth.employers.remove(employer)
+            print("Employer is removed")
+        else:
+            print("username not found")
