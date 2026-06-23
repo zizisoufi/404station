@@ -33,59 +33,59 @@ class Panel:
                 break
             else:
                 print("Dari Eshatebah Mizani Dadash")
-        
-        def admin_login_panel(self):
-            while True:
-                print("\nAdmin Login")
 
-                username = input("username: ")
-                password = input("password: ")
+    def admin_login_panel(self):
+        while True:
+            print("\nAdmin Login")
 
-                if self.auth.login(username, password, "admin"):
-                    print("Admin login succesfull.")
-                    self.admin_panel()
-                else:
-                    print("username or password is wrong")
-            
-        def admin_panel(self):
-            while True:
-                print("\nPanel Modiriati")
-                print("1. Add Emplouyer")
-                print("2. Remove Employer")
-                print("3. Show Employers")
-                print("4. Back")
+            username = input("username: ")
+            password = input("password: ")
 
-                i = input("Mikhay Koja Beri?")
+            if self.auth.login(username, password, "admin"):
+                print("Admin login succesfull.")
+                self.admin_panel()
+            else:
+                print("username or password is wrong")
 
-                if i == "1":
-                    self.add_employer()
-                elif i == "2":
-                    self.remove_employer()
-                elif i == "3":
-                    self.show_employer()
-                elif i == "4":
-                    return
+    def admin_panel(self):
+        while True:
+            print("\nPanel Modiriati")
+            print("1. Add Emplouyer")
+            print("2. Remove Employer")
+            print("3. Show Employers")
+            print("4. Back")
+
+            i = input("Mikhay Koja Beri?")
+
+            if i == "1":
+                self.add_employer()
+            elif i == "2":
+                self.remove_employer()
+            elif i == "3":
+                self.show_employer()
+            elif i == "4":
+                return
             else:
                 print("Dari Eshatebah Mizani Dadash")
 
-        def add_employer(self):
-            print("\nAdd employer")
+    def add_employer(self):
+        print("\nAdd employer")
 
-            username = input("Username: ")
-            password = input("Password: ")
+        username = input("Username: ")
+        password = input("Password: ")
 
-            #Check Validation and Append to employe list
+        #Check Validation and Append to employe list
 
-        def remove_employer(self):
-            username = input("Enter employer who we should remove")
-            
-            # chek if exist(if exist can be a method) remove from list
+    def remove_employer(self):
+        username = input("Enter employer who we should remove")
+        
+        # chek if exist(if exist can be a method) remove from list
 
-        def show_employer(self):
-            if len == 0:
-                print("user nout found")
-                return
-            
-            #for on employer
+    def show_employer(self):
+        if len == 0:
+            print("user nout found")
+            return
+        
+        #for on employer
 
 # we can write some metohd like if username exist and others 
