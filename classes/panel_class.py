@@ -190,6 +190,8 @@ class Panel:
         origin      = input("origin: ")
         destination = input("destination: ")
         station     = input("station: (E.X: khatib zade,Asadi,shahrabi,maneyjer jan <3) ").split(sep=",")
+        station.insert(0,origin)
+        station.append(destination)
         station_count = len(station)
         
         result = self.db.create_DI(Line(line_name,origin,destination,station,station_count),"lines")
@@ -213,10 +215,21 @@ class Panel:
             print(check)
 
             changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower()
-            new_value = input(f"{changable_attr} be chi taghir bedam: ")
+            
+            #if user want to change the station we change the input format
+            if changable_attr == "station":
+                new_value = input("station: (E.X: khatib zade,Asadi,shahrabi,maneyjer jan <3) ").split(sep=",")
+            else:
+                new_value = input(f"{changable_attr} be chi taghir bedam: ")
+
             updated_data = self.db.update_data( "lines", Name ,changable_attr, new_value)
             
             if updated_data:
+
+                #if uesr want change the station we updated the station count
+                if changable_attr == "station":
+                    self.db.update_data("lines",Name,"station_count",len(new_value))
+
                 print("khatet update shod horraa!")
                 print(updated_data)
             
