@@ -66,7 +66,7 @@ class Panel:
             elif i == "3":
                 self.show_employer()
             elif i == "4":
-                return
+                self.start()
             else:
                 print("Dari Eshatebah Mizani Dadash")
 
@@ -152,22 +152,22 @@ class Panel:
             i = input("Mikhay Koja Beri? ")
 
             if i == "1":
-                pass
+                self.add_line()
             elif i == "2":
-                pass
+                self.update_line()
             elif i == "3":
-                pass
+                self.delete_line()
             elif i == "4":
-                pass
+                self.show_lines()
             elif i == "5":
-              pass
+              self.add_train()
             elif i == "6":
-                pass
+                self.update_train()
             elif i == "7":
-                pass
+                self.delete_train()
             elif i == "8":
-                pass
+                self.show_trains
             elif i == "9":
-                return
+                self.start()
             else:
                 print("Dari Eshatebah Mizani Dadash")
