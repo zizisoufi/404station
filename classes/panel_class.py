@@ -123,7 +123,7 @@ class Panel:
 
     def employer_login_panel(self):
         while True:
-            print("\employer Login")
+            print("\nemployer Login")
 
             username = input("username: ")
             password = input("password: ")
@@ -171,3 +171,26 @@ class Panel:
                 self.start()
             else:
                 print("Dari Eshatebah Mizani Dadash")
+
+    # Employer
+
+    def passenger_panel(self):
+        while True:
+            print("\nPassenger Panel")
+            print("1. Register")
+            print("2. Login")
+            print("3. Back")
+
+            i = input("Mikhay koja beri? ")
+
+            if i == "1":
+                pass
+            elif i == "2":
+                pass
+            elif i == "3":
+                return
+            else:
+                print("Dadash dari eshtebah mizani")
+
+
+        
