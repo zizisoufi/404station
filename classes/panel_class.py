@@ -39,10 +39,9 @@ class Panel:
 
     def admin_login_panel(self):
         attempts = 1
-
         while attempts < 4:
             print(f"\n--- Admin Login (Attempt {attempts}/3) ---")
-            print("Type 'exit' to go back")
+            
 
             username = input("username: ").strip()
             if username.lower() == 'exit':
@@ -144,7 +143,7 @@ class Panel:
         
         while attempts < 4 :
             print(f"\n--- Employer Login (Attempt {attempts}/3) ---")
-            print("Type 'exit' to go back")
+
 
             username = input("username: ").strip()
             if username.lower() == 'exit':
@@ -339,10 +338,10 @@ class Panel:
                 #self.employer_panel() 
                 
         except ValueError as e :
-            print(f"⚠️ Error dar vorodiha: {e}")
+            print(f" Error dar vorodiha: {e}")
             
         except Exception as   e:
-            print(f"🆘 Error gheire montazere: {e}")
+            print(f" Error gheire montazere: {e}")
             
         return       
         
@@ -458,16 +457,28 @@ class Panel:
                 print("Dadash dari eshtebah mizani")
                          
     def passenger_login_panel(self):
-        print("\nPassenger Login")
-        username = input("Username: ")
-        password = input("Password: ")
+        attempts = 1
+        while attempts < 4: 
+            print(f"\n--- Passenger Login (Attempt {attempts}/3) ---")
+            
+            username = input("Username: ").strip()
+            if username.lower() == 'exit':
+                return
+            password = input("Password: ").strip()
+            if username.lower() == 'exit':
+                return
+            
 
-        if self.auth.login(username, password, "passenger"):
-            print("Login successful")
-            pass
-        else:
-            print("Username or password is wrong")
-
+            if self.auth.login(username, password, "passenger"):
+                print("Login successful")
+                pass
+            else:
+                attempts += 1
+                print(f"Wrong username or password! {4 - attempts} attempts left.")
+                
+        print("Access Denied! Too many failed attempts.")
+        return
+    
     def register_passenger(self):
         print("\nPassenger Register")
         username = input("Username: ")
