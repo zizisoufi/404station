@@ -184,13 +184,43 @@ class Panel:
             i = input("Mikhay koja beri? ")
 
             if i == "1":
-                pass
+                self.register_passenger()
             elif i == "2":
-                pass
+                self.register_passenger()
             elif i == "3":
-                return
+                self.start()
             else:
                 print("Dadash dari eshtebah mizani")
+                         
+    def passenger_login_panel(self):
+        print("\nPassenger Login")
+        username = input("Username: ")
+        password = input("Password: ")
 
+        if self.auth.login(username, password, "passenger"):
+            print("Login successful")
+            pass
+        else:
+            print("Username or password is wrong")
+
+    def register_passenger(self):
+        print("\nPassenger Register")
+        username = input("Username: ")
+
+        old_passenger = self.db.read("passengers", username)
+        if old_passenger:
+            print("This username already exists")
+            return
+
+        password = input("Password: ")
+        name = input("Name: ")
+        email = input("Email: ")
+
+        passenger = Passenger(username, password, name, email)
+
+        self.auth.rigester(passenger)
+        self.db.create_DI(passenger, "passengers")
+
+        print("Passenger registered")
 
         
