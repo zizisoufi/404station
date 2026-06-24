@@ -285,7 +285,29 @@ class Panel:
     def add_train(self):
 
         name = input("name: ")
+
+        #get all lines
+        lines = self.db.read_all_data("lines") 
+        a = [_line.name for _line in lines]
+        print(f"existed lines: ",a)
         line = input("line: ")
+
+        if line not in a:
+            flag = True
+            #We will keep the user logged in until they enter the correct value or exit completely.
+            while flag:
+                print("the line is not exist please chose from existed line")
+                choise = input("mikhay edame bedi? (Y,N): ").lower()
+                if choise == 'y':
+                    a = [_line.name for _line in lines]
+                    print(f"existed lines: ",a)
+                    line = input("line: ")
+                    if line in a:
+                        flag = False
+                elif choise == 'n':
+                    flag = False
+                    self.employer_panel()
+
         avarage_speed = input("avarage_speed: ")
         quality = input("quality: ")
         ticket_cost = input("ticket_cost: ")
@@ -323,8 +345,34 @@ class Panel:
                 else:
                     print("eshtebah kardi az aval shro kon!")
                     self.employer_panel()   
-               
+            #check if user chose change line we show ghe existed line
+            if changable_attr == "line":
+                lines = self.db.read_all_data("lines") 
+                a = [_line.name for _line in lines]
+                print(f"existed lines: ",a)
+
             new_value = input(f"{changable_attr} be chi taghir bedam: ")
+            
+            #checke if user choise line to change and the her choise is not in existed line print message and get the value again
+            if changable_attr == "line" and new_value not in a:
+                flag = True
+                #We will keep the user logged in until they enter the correct value or exit completely.
+                while flag:
+                    print("please choise line in existed line . ")
+                    choise = input("mikhay edame bedi? (Y,N): ").lower()
+                    if choise == 'y':
+                        lines = self.db.read_all_data("lines") 
+                        a = [_line.name for _line in lines]
+                        print(f"existed lines: ",a)
+                        new_value = input(f"{changable_attr} be chi taghir bedam: ")
+                        print("new_value",new_value)
+                        print(new_value in a)
+                        if new_value in a:
+                            flag = False
+                    elif choise == 'n':
+                        flag = False
+                        self.employer_panel()
+
             updated_data = self.db.update_data( "trains", id ,changable_attr, new_value)
             
             if updated_data:
