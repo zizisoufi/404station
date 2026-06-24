@@ -2,6 +2,7 @@ from classes.UserClass import Admin_User, Employer, Passenger, Authentication
 from database.database import DataBase
 from classes.line import Line
 from classes.train import Train
+from utilitys import backButton
 
 class Panel:
     def __init__(self):
@@ -41,8 +42,8 @@ class Panel:
         while True:
             print("\nAdmin Login")
 
-            username = input("username: ")
-            password = input("password: ")
+            username = input("username: ").strip()
+            password = input("password: ").strip()
 
             if self.auth.login(username, password, "admin"):
                 print("Admin login succesfull.")
@@ -58,7 +59,7 @@ class Panel:
             print("3. Show Employers")
             print("4. Back")
 
-            i = input("Mikhay Koja Beri? ")
+            i = input("Mikhay Koja Beri? ").strip()
 
             if i == "1":
                 self.add_employer()
@@ -73,7 +74,7 @@ class Panel:
 
     def add_employer(self):
         print("\nAdd employer")
-        username = input("Username: ")
+        username = input("Username: ").strip()
 
         #use db classes to read employers list
         old_employer = self.db.read("employers", username)
@@ -82,29 +83,44 @@ class Panel:
             return
         
 
-        password = input("Password: ")
-        first_name = input("First name: ")
-        last_name = input("Last Name: ")
-        email = input("Email: ")
+        password = input("Password: ").strip()
+        first_name = input("First name: ").strip()
+        last_name = input("Last Name: ").strip()
+        email = input("Email: ").strip()
 
-        employer = Employer(username, password, first_name, last_name, email)
+        if backButton.back("dost dary inaro sabt bokoni asalam? (Y/n) "):
 
-        #use authentication class to register a employer and added to the list
-        self.auth.rigester(employer)
-        self.db.create_DI(employer, "employers")
+            employer = Employer(username, password, first_name, last_name, email)
 
-        print(f"Employer {username} with {password} is created ")
+            #use authentication class to register a employer and added to the list
+            self.auth.rigester(employer)
+            self.db.create_DI(employer, "employers")
 
+            print(f"Employer {username} with {password} is created ")
+        else:
+            if backButton.back("dost dari dobare bezani? (Y/n) "):
+                self.add_employer()
+            else:
+                self.admin_panel()    
+        
     def remove_employer(self):
-        username = input("Enter employer username: ")
+        username = input("Enter employer username: ").strip()
 
         employer = self.db.read("employers", username)
         
         #check red method if return use remove data method to delete
         if employer:
-            self.db.remove_data("employers", username)
-            self.auth.employers.remove(employer)
-            print("Employer is removed")
+            if backButton.back("ba hazfe karmad ok hasty? (Y/N) "):
+
+                self.db.remove_data("employers", username)
+                self.auth.employers.remove(employer)
+                print("Employer is removed")
+
+            else:
+                if backButton.back("dost dari dobare hazf koni? (Y/n) "):
+                    self.remove_employer()
+                else:
+                    self.admin_panel()     
         else:
             print("username not found")
     
@@ -126,8 +142,8 @@ class Panel:
         while True:
             print("\nemployer Login")
 
-            username = input("username: ")
-            password = input("password: ")
+            username = input("username: ").strip()
+            password = input("password: ").strip()
 
             if self.auth.login(username, password, "employer"):
                 print("employer login succesfull.")
@@ -150,7 +166,7 @@ class Panel:
 
             
 
-            i = input("Mikhay Koja Beri? ")
+            i = input("Mikhay Koja Beri? ").strip()
 
             if i == "1":
                 self.add_line()
@@ -176,7 +192,7 @@ class Panel:
 
     def add_line(self):
 
-        line_name   = input("Line Name: ")
+        line_name   = input("Line Name: ").strip()
 
         check_name = self.db.read("lines",line_name)
         
@@ -187,54 +203,70 @@ class Panel:
             self.add_line()
         
 
-        origin      = input("origin: ")
-        destination = input("destination: ")
+        origin      = input("origin: ").strip()
+        destination = input("destination: ").strip()
         station     = input("station: (E.X: khatib zade,Asadi,shahrabi,maneyjer jan <3) ").split(sep=",")
         station_count = len(station)
         
-        result = self.db.create_DI(Line(line_name,origin,destination,station,station_count),"lines")
+        if backButton.back("dost dari hmin bashe?(Y/N)"):
 
-        if result:
-            print("Line dorst shod hooraa!!")
-            self.employer_panel() 
-        
+            result = self.db.create_DI(Line(line_name,origin,destination,station,station_count),"lines")
+
+            if result:
+                print("Line dorst shod hooraa!!")
+                self.employer_panel() 
+            
+            else:
+                print("moshkely pish omad dobare talash kon") 
+                self.employer_panel()   
         else:
-            print("moshkely pish omad dobare talash kon") 
-            self.employer_panel()   
-
+            if backButton.back("dost dari dobare bezani? (Y/n) "):
+                self.add_line()
+            else:
+                self.admin_panel()  
 
 
     def update_line(self):
-        Name = input("esm khati ke mikhay update koni chie? ")
+        Name = input("esm khati ke mikhay update koni chie? ").strip()
         check = self.db.read("lines",Name)
 
         if check:
 
             print(check)
 
-            changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower()
-            new_value = input(f"{changable_attr} be chi taghir bedam: ")
-            updated_data = self.db.update_data( "lines", Name ,changable_attr, new_value)
-            
-            if updated_data:
-                print("khatet update shod horraa!")
-                print(updated_data)
-            
-            else:
-               
-                answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower()
-               
-                if answer == "y":
-                    self.update_line()
-            
-                elif answer == "n":
-                    self.employer_panel()
-            
+            changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower().strip()
+            new_value = input(f"{changable_attr} be chi taghir bedam: ").strip()
+
+            if backButton.back("motmaeniiiiiii? (Y/N)"):
+
+
+                updated_data = self.db.update_data( "lines", Name ,changable_attr, new_value)
+                
+                if updated_data:
+                    print("khatet update shod horraa!")
+                    print(updated_data)
+                
                 else:
-                    print("eshtebah kardi az aval shro kon!")
-                    self.employer_panel()     
+                
+                    answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower().strip()
+                
+                    if answer == "y":
+                        self.update_line()
+                
+                    elif answer == "n":
+                        self.employer_panel()
+                
+                    else:
+                        print("eshtebah kardi az aval shro kon!")
+                        self.employer_panel()   
+            else:
+                if backButton.back("dost dari dobare bezani? (Y/n) "):
+                    self.update_line()
+                else:
+                    self.employer_panel()              
+
         else:
-            answer = input("hamchin khati nist, mikhay edame bedi(Y/N)").lower()
+            answer = input("hamchin khati nist, mikhay edame bedi(Y/N)").lower().strip()
                
             if answer == "y":
                 self.update_line()
@@ -248,17 +280,25 @@ class Panel:
 
             
     def delete_line(self):
-        Name = input("chiro mikhay hazf kon? ")
+        Name = input("chiro mikhay hazf kon? ").strip()
         check = self.db.remove_data("lines",Name)
 
         if check:
-            print("heyyyy hazf kardiiiddyaa!!!")
-            self.employer_panel()
+
+            if backButton.back("dada dari hazfesh mikoni, motmaeni? (Y/N)"):
+
+                print("heyyyy hazf kardiiiddyaa!!!")
+                self.employer_panel()
+            else:
+                if backButton.back("dost dari dobare hazf koni? (Y/n) "):
+                    self.delete_line()
+                else:
+                    self.employer_panel()      
         
         else:
             print("donbal chi hasti dada! hamchin chizi nist")
             
-            again = input("dost dari ey bar dighe emtahan koni?(Y/N)").lower()
+            again = input("dost dari ey bar dighe emtahan koni?(Y/N)").lower().strip()
 
             if again == "y":
                 self.delete_line()
@@ -284,35 +324,41 @@ class Panel:
 
     def add_train(self):
 
-        name = input("name: ")
-        line = input("line: ")
-        avarage_speed = input("avarage_speed: ")
-        quality = input("quality: ")
-        ticket_cost = input("ticket_cost: ")
-        capacity = input("capacity: ")
+        name = input("name: ").strip()
+        line = input("line: ").strip()
+        avarage_speed = input("avarage_speed: ").strip()
+        quality = input("quality: ").strip()
+        ticket_cost = input("ticket_cost: ").strip()
+        capacity = input("capacity: ").strip()
 
-        
-        result = self.db.create_DI(Train(name,line,avarage_speed,quality,ticket_cost,capacity),"trains")
+        if backButton.back("dost dari ina ezafe she? (Y/N)"):
 
-        if result:
-            print("train dorst shod hooraa!!")
-            self.employer_panel() 
-        
+            result = self.db.create_DI(Train(name,line,avarage_speed,quality,ticket_cost,capacity),"trains")
+
+            if result:
+                print("train dorst shod hooraa!!")
+                self.employer_panel() 
+            
+            else:
+                print("moshkely pish omad dobare talash kon") 
+                self.employer_panel() 
         else:
-            print("moshkely pish omad dobare talash kon") 
-            self.employer_panel() 
+            if backButton.back("dost dari dobare bezani? (Y/n) "):
+                self.add_train()
+            else:
+                self.employer_panel()          
 
     def update_train(self):
-        id = input("Id train ke mikhay update koni chie? ")
+        id = input("Id train ke mikhay update koni chie? ").strip()
         check = self.db.read("trains",id)
 
         if check:
             print("---------------")
             print(check)
 
-            changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower()
+            changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower().strip()
             if changable_attr == "id":
-                answer = input("dada chi migi , id avaz nemishe, mikhay edame bedi(Y/N)").lower()
+                answer = input("dada chi migi , id avaz nemishe, mikhay edame bedi(Y/N)").lower().strip()
                
                 if answer == "y":
                         self.update_train()
@@ -324,29 +370,38 @@ class Panel:
                     print("eshtebah kardi az aval shro kon!")
                     self.employer_panel()   
                
-            new_value = input(f"{changable_attr} be chi taghir bedam: ")
-            updated_data = self.db.update_data( "trains", id ,changable_attr, new_value)
-            
-            if updated_data:
-                print("train update shod horraa!")
-                print(updated_data)
-                self.employer_panel()
-            
-            else:
-               
-                answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower()
-               
-                if answer == "y":
-                    self.update_train()
-            
-                elif answer == "n":
+            new_value = input(f"{changable_attr} be chi taghir bedam: ").strip()
+
+            if backButton.back("az update motmaeniii dada? (Y/N)"):
+
+                updated_data = self.db.update_data( "trains", id ,changable_attr, new_value)
+                
+                if updated_data:
+                    print("train update shod horraa!")
+                    print(updated_data)
                     self.employer_panel()
-            
+                
                 else:
-                    print("eshtebah kardi az aval shro kon!")
-                    self.employer_panel()     
+                
+                    answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower().strip()
+                
+                    if answer == "y":
+                        self.update_train()
+                
+                    elif answer == "n":
+                        self.employer_panel()
+                
+                    else:
+                        print("eshtebah kardi az aval shro kon!")
+                        self.employer_panel() 
+            else:
+                if backButton.back("dost dari dobare bezani? (Y/n) "):
+                    self.update_train()
+                else:
+                    self.employer_panel()  
+
         else:
-            answer = input("hamchin id nist, mikhay edame bedi(Y/N)").lower()
+            answer = input("hamchin id nist, mikhay edame bedi(Y/N)").lower().strip()
                
             if answer == "y":
                 self.update_train()
@@ -359,17 +414,25 @@ class Panel:
                 self.employer_panel()   
 
     def delete_train(self):
-        id = input("chiro mikhay hazf kon? ")
+        id = input("chiro mikhay hazf kon? ").strip()
         check = self.db.remove_data("trains",id)
 
         if check:
-            print("heyyyy hazf kardiiiddyaa!!!")
-            self.employer_panel()
+            if backButton.back("motmaenii? (Y/N)"):
+
+                print("heyyyy hazf kardiiiddyaa!!!")
+                self.employer_panel()
+
+            else:
+                if backButton.back("dost dari dobare bezani? (Y/n) "):
+                    self.delete_train()
+                else:
+                    self.employer_panel()      
         
         else:
             print("donbal chi hasti dada! hamchin chizi nist")
             
-            again = input("dost dari ey bar dighe emtahan koni?(Y/N)").lower()
+            again = input("dost dari ey bar dighe emtahan koni?(Y/N)").lower().strip()
 
             if again == "y":
                 self.delete_train()
@@ -401,7 +464,7 @@ class Panel:
             print("2. Login")
             print("3. Back")
 
-            i = input("Mikhay koja beri? ")
+            i = input("Mikhay koja beri? ").strip()
 
             if i == "1":
                 self.register_passenger()
@@ -414,8 +477,8 @@ class Panel:
                          
     def passenger_login_panel(self):
         print("\nPassenger Login")
-        username = input("Username: ")
-        password = input("Password: ")
+        username = input("Username: ").strip()
+        password = input("Password: ").strip()
 
         if self.auth.login(username, password, "passenger"):
             print("Login successful")
@@ -425,23 +488,30 @@ class Panel:
 
     def register_passenger(self):
         print("\nPassenger Register")
-        username = input("Username: ")
+        username = input("Username: ").strip()
 
         old_passenger = self.db.read("passengers", username)
         if old_passenger:
             print("This username already exists")
             return
 
-        password = input("Password: ")
-        name = input("Name: ")
-        email = input("Email: ")
+        password = input("Password: ").strip()
+        name = input("Name: ").strip()
+        email = input("Email: ").strip()
 
-        passenger = Passenger(username, password, name, email)
+        if backButton.back("dost dary hamina ro berizi? (Y/N)"):
 
-        self.auth.rigester(passenger)
-        self.db.create_DI(passenger, "passengers")
+            passenger = Passenger(username, password, name, email)
 
-        print("Passenger registered")
+            self.auth.rigester(passenger)
+            self.db.create_DI(passenger, "passengers")
+
+            print("Passenger registered")
+        else:
+            if backButton.back("dost dari dobare bezani? (Y/n) "):
+                self.register_passenger()
+            else:
+                self.passenger_panel()      
     
     def passenger_dashboard(self):
         while True:
@@ -450,7 +520,7 @@ class Panel:
             print("2. Update Profile")
             print("4. Back")
 
-            i = input("Mikhay koja beri? ")
+            i = input("Mikhay koja beri? ").strip()
 
             if i == "1":
                 pass
