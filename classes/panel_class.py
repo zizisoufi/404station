@@ -222,5 +222,24 @@ class Panel:
         self.db.create_DI(passenger, "passengers")
 
         print("Passenger registered")
+    
+    def passenger_dashboard(self):
+        while True:
+            print("\nPassenger Dashboard")
+            print("1. But Ticket")
+            print("2. Update Profile")
+            print("4. Back")
+
+            i = input("Mikhay koja beri? ")
+
+            if i == "1":
+                pass
+            elif i == "2":
+                pass
+            elif i == "3":
+                return
+            else:
+                print("Dadash dari eshtebah mizani")
+
 
         
