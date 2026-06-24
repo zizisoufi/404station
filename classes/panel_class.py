@@ -360,7 +360,7 @@ class Panel:
 
     def delete_train(self):
         id = input("chiro mikhay hazf kon? ")
-        check = self.db.remove_data("tarins",id)
+        check = self.db.remove_data("trains",id)
 
         if check:
             print("heyyyy hazf kardiiiddyaa!!!")
