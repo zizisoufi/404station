@@ -1,16 +1,16 @@
-from classes.UserClass import Admin_User, Employer, Passenger, Authentication
+from classes.UserClass import Admin_User, Employer, Passenger #, Authentication
+from services.authentication import Authentication
 from database.database import DataBase
 from classes.line import Line
 from classes.train import Train
 
 class Panel:
     def __init__(self):
-        self.auth = Authentication()
         self.db   = DataBase()
-
+        self.auth = Authentication(database=self.db)
         #Default admin username and password
         admin = Admin_User("admin", "admin")
-        self.auth.rigester(admin)
+        # self.auth.rigester(admin)
         self.db.create_DI(admin, "admins")
 
     def start(self):
@@ -44,11 +44,12 @@ class Panel:
             username = input("username: ")
             password = input("password: ")
 
-            if self.auth.login(username, password, "admin"):
-                print("Admin login succesfull.")
+            login = self.auth.login(username, password, "admin")
+            if login["status"]:
+                print(login["message"])
                 self.admin_panel()
             else:
-                print("username or password is wrong")
+                print(login["message"])
 
     def admin_panel(self):
         while True:
@@ -76,10 +77,10 @@ class Panel:
         username = input("Username: ")
 
         #use db classes to read employers list
-        old_employer = self.db.read("employers", username)
-        if old_employer:
-            print("this username already exist")
-            return
+        # old_employer = self.db.read("employers", username)
+        # if old_employer:
+        #     print("this username already exist")
+        #     return
         
 
         password = input("Password: ")
@@ -89,11 +90,18 @@ class Panel:
 
         employer = Employer(username, password, first_name, last_name, email)
 
-        #use authentication class to register a employer and added to the list
-        self.auth.rigester(employer)
-        self.db.create_DI(employer, "employers")
+        register = self.auth.register(employer)
 
-        print(f"Employer {username} with {password} is created ")
+        #use authentication class to register a employer and added to the list
+        # self.auth.rigester(employer)
+        # self.db.create_DI(employer, "employers")
+        if register["status"]:
+            print(register["message"])
+            self.admin_panel()
+        else:
+            print(register["message"])
+            return
+        # print(f"Employer {username} with {password} is created ")
 
     def remove_employer(self):
         username = input("Enter employer username: ")
@@ -129,11 +137,12 @@ class Panel:
             username = input("username: ")
             password = input("password: ")
 
-            if self.auth.login(username, password, "employer"):
-                print("employer login succesfull.")
+            login = self.auth.login(username, password, "employer")
+            if login.status:
+                print(login.message)
                 self.employer_panel()
             else:
-                print("username or password is wrong")
+                print(login.message)
 
     def employer_panel(self):
         while True:
