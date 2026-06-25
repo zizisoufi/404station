@@ -115,7 +115,7 @@ class EmployerPanel:
             if backButton.back("dost dari dobare bezani? (Y/n) "):
                 self.add_line()
             else:
-                self.admin_panel()  
+                return  
 
 
     def update_line(self):
