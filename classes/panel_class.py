@@ -1,4 +1,4 @@
-from classes.UserClass import Admin_User, Employer, Passenger #, Authentication
+from classes.user import Admin_User, Employer, Passenger #, Authentication
 from services.authentication import Authentication
 from database.database import DataBase
 from classes.line import Line
