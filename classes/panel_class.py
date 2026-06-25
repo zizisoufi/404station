@@ -1,4 +1,5 @@
-from classes.UserClass import Admin_User, Employer, Passenger, Authentication
+from classes.UserClass import Admin_User, Employer, Passenger #, Authentication
+from services.authentication import Authentication
 from database.database import DataBase
 from classes.line import Line
 from classes.train import Train
@@ -6,12 +7,11 @@ from utilitys import backButton
 
 class Panel:
     def __init__(self):
-        self.auth = Authentication()
         self.db   = DataBase()
-
+        self.auth = Authentication(database=self.db)
         #Default admin username and password
         admin = Admin_User("admin", "admin")
-        self.auth.rigester(admin)
+        # self.auth.rigester(admin)
         self.db.create_DI(admin, "admins")
 
     def start(self):
@@ -39,17 +39,25 @@ class Panel:
     # Admin
 
     def admin_login_panel(self):
-        while True:
-            print("\nAdmin Login")
+        attempts = 1
+        while attempts < 4:
+            print(f"\n--- Admin Login (Attempt {attempts}/3) ---")
+            
 
             username = input("username: ").strip()
             password = input("password: ").strip()
 
-            if self.auth.login(username, password, "admin"):
-                print("Admin login succesfull.")
+            password = input("password: ").strip()
+            if password.lower() == 'exit':
+                return
+
+            login = self.auth.login(username, password, "admin")
+            if login["status"]:
+                print(login["message"])
                 self.admin_panel()
+                return
             else:
-                print("username or password is wrong")
+                print(login["message"])
 
     def admin_panel(self):
         while True:
@@ -68,7 +76,9 @@ class Panel:
             elif i == "3":
                 self.show_employer()
             elif i == "4":
-                self.start()
+                return
+                # Exit the current panel and return to the previous caller, 
+                # avoiding unnecessary recursion or stack overflow.
             else:
                 print("Dari Eshatebah Mizani Dadash")
 
@@ -77,10 +87,10 @@ class Panel:
         username = input("Username: ").strip()
 
         #use db classes to read employers list
-        old_employer = self.db.read("employers", username)
-        if old_employer:
-            print("this username already exist")
-            return
+        # old_employer = self.db.read("employers", username)
+        # if old_employer:
+        #     print("this username already exist")
+        #     return
         
 
         password = input("Password: ").strip()
@@ -93,10 +103,22 @@ class Panel:
             employer = Employer(username, password, first_name, last_name, email)
 
             #use authentication class to register a employer and added to the list
-            self.auth.rigester(employer)
+            #self.auth.rigester(employer)
             self.db.create_DI(employer, "employers")
+            register = self.auth.register(employer)
 
-            print(f"Employer {username} with {password} is created ")
+            #use authentication class to register a employer and added to the list
+            # self.auth.rigester(employer)
+            # self.db.create_DI(employer, "employers")
+            if register["status"]:
+                print(register["message"])
+                self.admin_panel()
+            else:
+                print(register["message"])
+                return
+            # print(f"Employer {username} with {password} is created ")
+
+                print(f"Employer {username} with {password} is created ")
         else:
             if backButton.back("dost dari dobare bezani? (Y/n) "):
                 self.add_employer()
@@ -139,18 +161,38 @@ class Panel:
     # Employer
 
     def employer_login_panel(self):
-        while True:
-            print("\nemployer Login")
+        
+        attempts = 1
+        
+        while attempts < 4 :
+            print(f"\n--- Employer Login (Attempt {attempts}/3) ---")
+
 
             username = input("username: ").strip()
+            if username.lower() == 'exit':
+                    return
             password = input("password: ").strip()
+            if username.lower() == 'exit':
+                    return
+                        
 
-            if self.auth.login(username, password, "employer"):
-                print("employer login succesfull.")
+            login = self.auth.login(username, password, "employer")
+            if login["status"]:
+                print(login["message"])
                 self.employer_panel()
+                return
+                
             else:
-                print("username or password is wrong")
+                print(login["message"])
 
+                attempts += 1
+                print(f"Eshtebah shod! {4 - attempts}attempts left.")
+                    
+                
+        print("\n Access Denied! soookhtiiii heheheheheh")
+        return
+    
+    
     def employer_panel(self):
         while True:
             print("\nPanel employer")
@@ -206,6 +248,8 @@ class Panel:
         origin      = input("origin: ").strip()
         destination = input("destination: ").strip()
         station     = input("station: (E.X: khatib zade,Asadi,shahrabi,maneyjer jan <3) ").split(sep=",")
+        station.insert(0,origin)
+        station.append(destination)
         station_count = len(station)
         
         if backButton.back("dost dari hmin bashe?(Y/N)"):
@@ -239,16 +283,28 @@ class Panel:
 
             if backButton.back("motmaeniiiiiii? (Y/N)"):
 
+                changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower()
+                
+                #if user want to change the station we change the input format
+                if changable_attr == "station":
+                    new_value = input("station: (E.X: khatib zade,Asadi,shahrabi,maneyjer jan <3) ").split(sep=",")
+                else:
+                    new_value = input(f"{changable_attr} be chi taghir bedam: ")
 
                 updated_data = self.db.update_data( "lines", Name ,changable_attr, new_value)
                 
                 if updated_data:
+
+                    #if uesr want change the station we updated the station count
+                    if changable_attr == "station":
+                        self.db.update_data("lines",Name,"station_count",len(new_value))
+
                     print("khatet update shod horraa!")
                     print(updated_data)
-                
+            
                 else:
                 
-                    answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower().strip()
+                    answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower()
                 
                     if answer == "y":
                         self.update_line()
@@ -257,8 +313,18 @@ class Panel:
                         self.employer_panel()
                 
                     else:
-                        print("eshtebah kardi az aval shro kon!")
-                        self.employer_panel()   
+                    
+                        answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower().strip()
+                    
+                        if answer == "y":
+                            self.update_line()
+                    
+                        elif answer == "n":
+                            self.employer_panel()
+                    
+                        else:
+                            print("eshtebah kardi az aval shro kon!")
+                            self.employer_panel()   
             else:
                 if backButton.back("dost dari dobare bezani? (Y/n) "):
                     self.update_line()
@@ -324,29 +390,83 @@ class Panel:
 
     def add_train(self):
 
-        name = input("name: ").strip()
-        line = input("line: ").strip()
-        avarage_speed = input("avarage_speed: ").strip()
-        quality = input("quality: ").strip()
-        ticket_cost = input("ticket_cost: ").strip()
-        capacity = input("capacity: ").strip()
+        # name = input("name: ").strip()
+        # line = input("line: ").strip()
+        # avarage_speed = input("avarage_speed: ").strip()
+        # quality = input("quality: ").strip()
+        # ticket_cost = input("ticket_cost: ").strip()
+        # capacity = input("capacity: ").strip()
 
-        if backButton.back("dost dari ina ezafe she? (Y/N)"):
-
-            result = self.db.create_DI(Train(name,line,avarage_speed,quality,ticket_cost,capacity),"trains")
-
-            if result:
-                print("train dorst shod hooraa!!")
-                self.employer_panel() 
+       
+        try:
             
+            print("\n--- Adding New Train ---")
+            
+            name = input("name: ")
+
+            #get all lines
+            lines = self.db.read_all_data("lines") 
+
+            #check we have any line or not 
+            if len(lines) < 1:
+                print("lotfan aval line ra besazid! ")
+                self.employer_panel()
+
+            a = [_line.name for _line in lines]
+            print(f"existed lines: ",a)
+            line = input("line: ")
+
+            if line not in a:
+                flag = True
+                #We will keep the user logged in until they enter the correct value or exit completely.
+                while flag:
+                    print("the line is not exist please chose from existed line")
+                    choise = input("mikhay edame bedi? (Y,N): ").lower()
+                    if choise == 'y':
+                        a = [_line.name for _line in lines]
+                        print(f"existed lines: ",a)
+                        line = input("line: ")
+                        if line in a:
+                            flag = False
+                    elif choise == 'n':
+                        flag = False
+                        self.employer_panel()
+
+            avarage_speed = float(input("avarage_speed: "))
+            quality = input("quality: ")
+            ticket_cost = float(input("ticket_cost: "))
+            capacity = int(input("capacity: "))
+
+            if backButton.back("dost dari ina ezafe she? (Y/N)"):
+
+                result = self.db.create_DI(Train(name,line,avarage_speed,quality,ticket_cost,capacity),"trains")
+
+                if result:
+                    print("train dorst shod hooraa!!")
+                    self.employer_panel() 
+                
+                else:
+                    print("moshkely pish omad dobare talash kon") 
+                    self.employer_panel() 
             else:
-                print("moshkely pish omad dobare talash kon") 
-                self.employer_panel() 
-        else:
-            if backButton.back("dost dari dobare bezani? (Y/n) "):
-                self.add_train()
-            else:
-                self.employer_panel()          
+                if backButton.back("dost dari dobare bezani? (Y/n) "):
+                    self.add_train()
+                else:
+                    self.employer_panel()          
+                    
+            
+                # else:
+                #     print("moshkely pish omad dobare talash kon") 
+                #     #self.employer_panel() 
+                
+        except ValueError as e :
+            print(f" Error dar vorodiha: {e}")
+            
+        except Exception as   e:
+            print(f" Error gheire montazere: {e}")
+            
+        return       
+        
 
     def update_train(self):
         id = input("Id train ke mikhay update koni chie? ").strip()
@@ -369,10 +489,39 @@ class Panel:
                 else:
                     print("eshtebah kardi az aval shro kon!")
                     self.employer_panel()   
-               
-            new_value = input(f"{changable_attr} be chi taghir bedam: ").strip()
+            #check if user chose change line we show ghe existed line
+            if changable_attr == "line":
+                lines = self.db.read_all_data("lines") 
 
-            if backButton.back("az update motmaeniii dada? (Y/N)"):
+                #check we have any line or not 
+                if len(lines) < 1:
+                    print("lotfan aval line ra besazid! ")
+                    self.employer_panel()
+
+                a = [_line.name for _line in lines]
+                print(f"existed lines: ",a)
+
+            new_value = input(f"{changable_attr} be chi taghir bedam: ")
+            
+            #checke if user choise line to change and the her choise is not in existed line print message and get the value again
+            if changable_attr == "line" and new_value not in a:
+                flag = True
+                #We will keep the user logged in until they enter the correct value or exit completely.
+                while flag:
+                    print("please choise line in existed line . ")
+                    choise = input("mikhay edame bedi? (Y,N): ").lower()
+                    if choise == 'y':
+                        lines = self.db.read_all_data("lines") 
+                        a = [_line.name for _line in lines]
+                        print(f"existed lines: ",a)
+                        new_value = input(f"{changable_attr} be chi taghir bedam: ")
+                        if new_value in a:
+                            flag = False
+                    elif choise == 'n':
+                        flag = False
+                        self.employer_panel()
+
+            if backButton.back("dost dari ina ezafe she? (Y/N)"):            
 
                 updated_data = self.db.update_data( "trains", id ,changable_attr, new_value)
                 
@@ -383,17 +532,17 @@ class Panel:
                 
                 else:
                 
-                    answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower().strip()
+                    answer = input("update ba khata movajeh shod, mikhay edame bedi(Y/N)").lower()
                 
                     if answer == "y":
                         self.update_train()
                 
                     elif answer == "n":
                         self.employer_panel()
-                
+                    
                     else:
-                        print("eshtebah kardi az aval shro kon!")
-                        self.employer_panel() 
+                        self.employer_panel()
+                   
             else:
                 if backButton.back("dost dari dobare bezani? (Y/n) "):
                     self.update_train()
@@ -476,16 +625,28 @@ class Panel:
                 print("Dadash dari eshtebah mizani")
                          
     def passenger_login_panel(self):
-        print("\nPassenger Login")
-        username = input("Username: ").strip()
-        password = input("Password: ").strip()
+        attempts = 1
+        while attempts < 4: 
+            print(f"\n--- Passenger Login (Attempt {attempts}/3) ---")
+            
+            username = input("Username: ").strip()
+            if username.lower() == 'exit':
+                return
+            password = input("Password: ").strip()
+            if username.lower() == 'exit':
+                return
+            
 
-        if self.auth.login(username, password, "passenger"):
-            print("Login successful")
-            pass
-        else:
-            print("Username or password is wrong")
-
+            if self.auth.login(username, password, "passenger"):
+                print("Login successful")
+                pass
+            else:
+                attempts += 1
+                print(f"Wrong username or password! {4 - attempts} attempts left.")
+                
+        print("Access Denied! Too many failed attempts.")
+        return
+    
     def register_passenger(self):
         print("\nPassenger Register")
         username = input("Username: ").strip()
@@ -515,7 +676,7 @@ class Panel:
     
     def passenger_dashboard(self):
         while True:
-            print("\nPassenger Dashboard")
+            print("\n--- Passenger Dashboard ---")
             print("1. But Ticket")
             print("2. Update Profile")
             print("4. Back")
