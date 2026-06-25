@@ -1,4 +1,5 @@
 from typing import Optional
+from utilitys.checker import check
 #create authentication class To prevent code duplication
 class Authentication:
     def __init__(self,database):
@@ -22,22 +23,28 @@ class Authentication:
             data = self.database.read("employers",user.username)
             if data is False:
                 #res is true or flase
-                res = self.database.create_DI(user,"employers")
-                if res == True:
-                    return {"status": True,'message': "user successfully created" }
+                if check(user.password,user.email):
+                    res = self.database.create_DI(user,"employers")
+                    if res == True:
+                        return {"status": True,'message': "user successfully created" }
+                    else:
+                        return {"status": False,'message': "failed to create user" }
                 else:
-                    return {"status": False,'message': "failed to create user" }
+                    return {"status": False,'message': "the password or email format is not valid" }    
             return {"status": False,'message': "user is existed with this username" }
         elif user.role == "passenger":
             user_email = self.database.read("passengers",user.email)
             user_username = self.database.read("passengers",user.username)
             if user_email == False and user_username is False:
-                res = self.database.create_DI(user,"passengers")
-                if res == True:
-                    return {"status": True,'message': "user successfully created" }
+                if check(user.password,user.email):
+                    res = self.database.create_DI(user,"passengers")
+                    if res == True:
+                        return {"status": True,'message': "user successfully created" }
+                    else:
+                        return {"status": False,'message': "failed to create user" }
                 else:
-                    return {"status": False,'message': "failed to create user" }
-
+                    return {"status": False,'message': "the password or email format is not valid" }
+                
             return {"status": False,'message': "user is existed with this username or email" }
         
         return {"status": False, "message": "invalid role"}
