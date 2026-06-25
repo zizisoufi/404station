@@ -1,6 +1,5 @@
 from classes.user import Passenger
-from utilitys import backButton
-
+from utilitys import backButton, print_file
 
 class PassengerPanel:
     def __init__(self, database, authentication):
@@ -19,7 +18,7 @@ class PassengerPanel:
             if i == "1":
                 self.register_passenger()
             elif i == "2":
-                self.register_passenger()
+                self.passenger_login_panel()
             elif i == "3":
                 self.start()
             else:
@@ -70,17 +69,41 @@ class PassengerPanel:
     def passenger_dashboard(self):
         while True:
             print("\n--- Passenger Dashboard ---")
-            print("1. But Ticket")
+            print("1. Buy Ticket")
             print("2. Update Profile")
             print("4. Back")
 
             i = input("Mikhay koja beri? ").strip()
 
             if i == "1":
-                pass
+                self.buy_ticket()
             elif i == "2":
                 pass
             elif i == "3":
                 return
             else:
                 print("Dadash dari eshtebah mizani")
+
+    def buy_ticket(self):
+        print("\n--- BUY Panel ---")
+
+        all_lines = self.db.read_all_data("lines")
+        all_trains = self.db.read_all_data("trains")
+        
+        if len(all_lines) < 1:
+            print("hanoz beliti baray frosh nist :)")
+            self.passenger_dashboard()
+
+        try:
+            for line in all_lines:
+                for train in all_trains:
+                    if line.name == train.line:
+                        is_printed = print_file.save_to_file("existed_trains.txt",destination=line.destination,train_name=train.name,ticket_cost=train.ticket_cost)
+            if is_printed:
+                print("The information of all existed trains in the existed_trains.txt file was saved.")
+        except Exception as e:
+            print(f"khataaaa!: {e}")
+            self.passenger_panel()
+        
+
+        
