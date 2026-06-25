@@ -135,7 +135,6 @@ class Panel:
             if backButton.back("ba hazfe karmad ok hasty? (Y/N) "):
 
                 self.db.remove_data("employers", username)
-                self.auth.employers.remove(employer)
                 print("Employer is removed")
 
             else:
