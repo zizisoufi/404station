@@ -636,14 +636,14 @@ class Panel:
             if username.lower() == 'exit':
                 return
             
-
-            if self.auth.login(username, password, "passenger"):
-                print("Login successful")
-                pass
+            passenger_auth = self.auth.login(username, password, "passenger")
+            if passenger_auth["status"]:
+                print(passenger_auth["message"])
+                self.passenger_dashboard()
             else:
+                print(passenger_auth["message"])
                 attempts += 1
-                print(f"Wrong username or password! {4 - attempts} attempts left.")
-                
+                        
         print("Access Denied! Too many failed attempts.")
         return
     
