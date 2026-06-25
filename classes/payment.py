@@ -1,4 +1,4 @@
-from classes.Card import card
+from classes.Card import Card
 from BANK import API
 
 
