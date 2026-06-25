@@ -29,7 +29,7 @@ class Panel:
             elif choice == "2":
                 self.employer_login_panel()
             elif choice == "3":
-                pass
+                self.passenger_panel()
             elif choice == "4":
                 print("Shab O RoozegaR Khosh")
                 break
@@ -650,12 +650,6 @@ class Panel:
     def register_passenger(self):
         print("\nPassenger Register")
         username = input("Username: ").strip()
-
-        old_passenger = self.db.read("passengers", username)
-        if old_passenger:
-            print("This username already exists")
-            return
-
         password = input("Password: ").strip()
         name = input("Name: ").strip()
         email = input("Email: ").strip()
@@ -663,17 +657,15 @@ class Panel:
         if backButton.back("dost dary hamina ro berizi? (Y/N)"):
 
             passenger = Passenger(username, password, name, email)
-
-            self.auth.rigester(passenger)
-            self.db.create_DI(passenger, "passengers")
-
-            print("Passenger registered")
-        else:
-            if backButton.back("dost dari dobare bezani? (Y/n) "):
-                self.register_passenger()
+            passenger_auth = self.auth.register(passenger)
+            
+            if passenger_auth["status"]:
+                print(passenger_auth["message"])
+                self.passenger_login_panel()
             else:
-                self.passenger_panel()      
-    
+                print(passenger_auth["message"])
+                return
+                
     def passenger_dashboard(self):
         while True:
             print("\n--- Passenger Dashboard ---")
