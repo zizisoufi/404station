@@ -38,16 +38,24 @@ class Panel:
     # Admin
 
     def admin_login_panel(self):
-        while True:
-            print("\nAdmin Login")
+        attempts = 1
+        while attempts < 4:
+            print(f"\n--- Admin Login (Attempt {attempts}/3) ---")
+            
 
-            username = input("username: ")
-            password = input("password: ")
+            username = input("username: ").strip()
+            if username.lower() == 'exit':
+                return
+
+            password = input("password: ").strip()
+            if password.lower() == 'exit':
+                return
 
             login = self.auth.login(username, password, "admin")
             if login["status"]:
                 print(login["message"])
                 self.admin_panel()
+                return
             else:
                 print(login["message"])
 
@@ -68,7 +76,9 @@ class Panel:
             elif i == "3":
                 self.show_employer()
             elif i == "4":
-                self.start()
+                return
+                # Exit the current panel and return to the previous caller, 
+                # avoiding unnecessary recursion or stack overflow.
             else:
                 print("Dari Eshatebah Mizani Dadash")
 
@@ -131,19 +141,38 @@ class Panel:
     # Employer
 
     def employer_login_panel(self):
-        while True:
-            print("\nemployer Login")
+        
+        attempts = 1
+        
+        while attempts < 4 :
+            print(f"\n--- Employer Login (Attempt {attempts}/3) ---")
 
-            username = input("username: ")
-            password = input("password: ")
+
+            username = input("username: ").strip()
+            if username.lower() == 'exit':
+                    return
+            password = input("password: ").strip()
+            if username.lower() == 'exit':
+                    return
+                        
 
             login = self.auth.login(username, password, "employer")
-            if login.status:
-                print(login.message)
+            if login["status"]:
+                print(login["message"])
                 self.employer_panel()
+                return
+                
             else:
-                print(login.message)
+                print(login["message"])
 
+                attempts += 1
+                print(f"Eshtebah shod! {4 - attempts}attempts left.")
+                    
+                
+        print("\n Access Denied! soookhtiiii heheheheheh")
+        return
+    
+    
     def employer_panel(self):
         while True:
             print("\nPanel employer")
@@ -341,16 +370,36 @@ class Panel:
         ticket_cost = input("ticket_cost: ")
         capacity = input("capacity: ")
 
+        print("\n--- Adding New Train ---")
         
-        result = self.db.create_DI(Train(name,line,avarage_speed,quality,ticket_cost,capacity),"trains")
+        try:
 
-        if result:
-            print("train dorst shod hooraa!!")
-            self.employer_panel() 
+            name = input("name: ")
+            line = input("line: ")
+            avarage_speed = float(input("avarage_speed: "))
+            quality = input("quality: ")
+            ticket_cost = float(input("ticket_cost: "))
+            capacity = int(input("capacity: "))
+
+            
+            result = self.db.create_DI(Train(name,line,avarage_speed,quality,ticket_cost,capacity),"trains")
+
+            if result:
+                print("train dorst shod hooraa!!")
+                #self.employer_panel() 
+            
+            else:
+                print("moshkely pish omad dobare talash kon") 
+                #self.employer_panel() 
+                
+        except ValueError as e :
+            print(f" Error dar vorodiha: {e}")
+            
+        except Exception as   e:
+            print(f" Error gheire montazere: {e}")
+            
+        return       
         
-        else:
-            print("moshkely pish omad dobare talash kon") 
-            self.employer_panel() 
 
     def update_train(self):
         id = input("Id train ke mikhay update koni chie? ")
@@ -493,16 +542,28 @@ class Panel:
                 print("Dadash dari eshtebah mizani")
                          
     def passenger_login_panel(self):
-        print("\nPassenger Login")
-        username = input("Username: ")
-        password = input("Password: ")
+        attempts = 1
+        while attempts < 4: 
+            print(f"\n--- Passenger Login (Attempt {attempts}/3) ---")
+            
+            username = input("Username: ").strip()
+            if username.lower() == 'exit':
+                return
+            password = input("Password: ").strip()
+            if username.lower() == 'exit':
+                return
+            
 
-        if self.auth.login(username, password, "passenger"):
-            print("Login successful")
-            pass
-        else:
-            print("Username or password is wrong")
-
+            if self.auth.login(username, password, "passenger"):
+                print("Login successful")
+                pass
+            else:
+                attempts += 1
+                print(f"Wrong username or password! {4 - attempts} attempts left.")
+                
+        print("Access Denied! Too many failed attempts.")
+        return
+    
     def register_passenger(self):
         print("\nPassenger Register")
         username = input("Username: ")
@@ -525,7 +586,7 @@ class Panel:
     
     def passenger_dashboard(self):
         while True:
-            print("\nPassenger Dashboard")
+            print("\n--- Passenger Dashboard ---")
             print("1. But Ticket")
             print("2. Update Profile")
             print("4. Back")
