@@ -1,7 +1,8 @@
 import re
 
 email_pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
-password_pattern = pattern = r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@&])[A-Za-z\d@&]{6,}$"
+password_pattern = r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*@)(?=.*&)[a-zA-Z\d@&]{8,}$'
+
 
 def check(password,email):
     check_email = re.fullmatch(email_pattern,email)
@@ -11,17 +12,8 @@ def check(password,email):
         return True
     else:
         return False
+    
+    
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+print(check("pooya@test1&", "pooya@gmail.com"))

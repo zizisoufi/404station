@@ -45,7 +45,7 @@ class Panel:
             
 
             username = input("username: ").strip()
-            password = input("password: ").strip()
+            #password = input("password: ").strip()
 
             password = input("password: ").strip()
             if password.lower() == 'exit':
@@ -104,7 +104,7 @@ class Panel:
 
             #use authentication class to register a employer and added to the list
             #self.auth.rigester(employer)
-            self.db.create_DI(employer, "employers")
+            #self.db.create_DI(employer, "employers")
             register = self.auth.register(employer)
 
             #use authentication class to register a employer and added to the list
