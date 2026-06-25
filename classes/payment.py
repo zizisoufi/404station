@@ -17,10 +17,10 @@ class PaymentService:
                 return
         
             card_number = input("shomare cartet chande?").strip()
-            exp_month = input("mahe enghezaye kartet chiye?").strip()
-            exp_year = input("sale enghezaye kartet chiye?").strip()
-            password = input("password kartet chiye?").strip()
-            cvv2 = input("cvv2 enghezaye kartet chiye?").strip()
+            exp_month = int(input("mahe enghezaye kartet chiye?").strip())
+            exp_year = int(input("sale enghezaye kartet chiye?").strip())
+            password = int(input("password kartet chiye?").strip())
+            cvv2 = int(input("cvv2 enghezaye kartet chiye?").strip())
             
             payment = self.bank.pay(card_number, exp_month, exp_year, password, cvv2, amount)
         

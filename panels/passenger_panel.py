@@ -1,5 +1,7 @@
 from classes.user import Passenger
 from utilitys import backButton
+from classes.payment import PaymentService
+from database.database import DataBase
 
 
 class PassengerPanel:
@@ -19,9 +21,9 @@ class PassengerPanel:
             if i == "1":
                 self.register_passenger()
             elif i == "2":
-                self.register_passenger()
+                self.passenger_login_panel()
             elif i == "3":
-                self.start()
+                return
             else:
                 print("Dadash dari eshtebah mizani")
                          
@@ -40,7 +42,7 @@ class PassengerPanel:
             passenger_auth = self.auth.login(username, password, "passenger")
             if passenger_auth["status"]:
                 print(passenger_auth["message"])
-                self.passenger_dashboard()
+                self.passenger_dashboard(passenger_auth)
             else:
                 print(passenger_auth["message"])
                 attempts += 1
@@ -67,11 +69,12 @@ class PassengerPanel:
                 print(passenger_auth["message"])
                 return
                 
-    def passenger_dashboard(self):
+    def passenger_dashboard(self,passenger):
         while True:
             print("\n--- Passenger Dashboard ---")
             print("1. But Ticket")
             print("2. Update Profile")
+            print("3. Charge Wallet")
             print("4. Back")
 
             i = input("Mikhay koja beri? ").strip()
@@ -82,7 +85,7 @@ class PassengerPanel:
                 pass
             elif i == "3":
                 payment_service = PaymentService()
-                payment_service.charge_wallet(Passenger)                
+                payment_service.charge_wallet(passenger)                
             elif i == "4":
                 return
             else:
