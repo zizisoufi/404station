@@ -32,7 +32,7 @@ class Panel:
                 self.passenger_panel()
             elif choice == "4":
                 print("Shab O RoozegaR Khosh")
-                break
+                exit()
             else:
                 print("Dari Eshatebah Mizani Dadash")
 
@@ -278,19 +278,20 @@ class Panel:
 
             print(check)
 
-            changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower().strip()
-            new_value = input(f"{changable_attr} be chi taghir bedam: ").strip()
+            # changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower().strip()
+            # new_value = input(f"{changable_attr} be chi taghir bedam: ").strip()
 
-            if backButton.back("motmaeniiiiiii? (Y/N)"):
+            # if backButton.back("motmaeniiiiiii? (Y/N)"):
 
-                changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower()
+            changable_attr = input("eshgam chi ro mikhy avaz koni: ").lower()
                 
                 #if user want to change the station we change the input format
-                if changable_attr == "station":
-                    new_value = input("station: (E.X: khatib zade,Asadi,shahrabi,maneyjer jan <3) ").split(sep=",")
-                else:
-                    new_value = input(f"{changable_attr} be chi taghir bedam: ")
+            if changable_attr == "station":
+                new_value = input("station: (E.X: khatib zade,Asadi,shahrabi,maneyjer jan <3) ").split(sep=",")
+            else:
+                new_value = input(f"{changable_attr} be chi taghir bedam: ")
 
+            if backButton.back("motmaeniiiiiii? (Y/N)"):
                 updated_data = self.db.update_data( "lines", Name ,changable_attr, new_value)
                 
                 if updated_data:

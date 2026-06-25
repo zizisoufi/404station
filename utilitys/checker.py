@@ -15,5 +15,3 @@ def check(password,email):
     
     
 
-
-print(check("pooya@test1&", "pooya@gmail.com"))
