@@ -17,10 +17,12 @@ class API:
             return False
         return True
 
+    #it s generate a random payment id
     def generate_payment_id(self, amount, card):
         import random
         return f'{card}{amount}{random.randint(100000, 999999)}'
 
+    
     def pay(self, card, exp_month, exp_year, password, cvv2, amount):
         if self.validate(card, exp_month, exp_year, password, cvv2):
             return self.generate_payment_id(amount, card)

@@ -26,6 +26,8 @@ class Passenger(User):
         super().__init__(username,password,"passenger")
         self.name = name
         self.email = email
+        self.card = []
+       
         
     def __str__(self):
         return super().__str__() + f"Name: {self.name}\nEmail:{self.email}"        
