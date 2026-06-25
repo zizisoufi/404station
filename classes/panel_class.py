@@ -58,6 +58,7 @@ class Panel:
                 return
             else:
                 print(login["message"])
+                attempts += 1
 
     def admin_panel(self):
         while True:
