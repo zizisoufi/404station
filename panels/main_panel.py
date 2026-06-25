@@ -6,22 +6,28 @@ class MainPanel:
 
     def start(self):
         while True:
-            print("\nBe 404 Station Khosh Omadi")
-            print("1. Admin Panel")
-            print("2. Employer")
-            print("3. Passenger")
-            print("4. Exit")
-
-            choice = input("Mikhay Koja Beri? ")
+            self.show_menu()
+            choice = input("Mikhay Koja Beri? ").strip()
 
             if choice == "1":
-                self.admin_login_panel()
+                self.admin_panel.admin_login_panel()
+
             elif choice == "2":
-                self.employer_login_panel()
+                self.employer_panel.login()
+
             elif choice == "3":
-                self.passenger_panel()
+                self.passenger_panel.menu()
+
             elif choice == "4":
-                print("Shab O RoozegaR Khosh")
-                exit()
+                print("Shab O Roozegar Khosh")
+                break
+
             else:
-                print("Dari Eshatebah Mizani Dadash")
+                print("Dari Eshtebah Mizani Dadash")
+
+    def show_menu(self):
+        print("\nBe 404 Station Khosh Omadi")
+        print("1. Admin Panel")
+        print("2. Employer Panel")
+        print("3. Passenger Panel")
+        print("4. Exit")
