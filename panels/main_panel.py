@@ -13,10 +13,10 @@ class MainPanel:
                 self.admin_panel.admin_login_panel()
 
             elif choice == "2":
-                self.employer_panel.login()
+                self.employer_panel.employer_login_panel()
 
             elif choice == "3":
-                self.passenger_panel.menu()
+                self.passenger_panel.passenger_panel()
 
             elif choice == "4":
                 print("Shab O Roozegar Khosh")
