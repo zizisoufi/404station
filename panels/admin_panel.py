@@ -47,7 +47,7 @@ class AdminPanel:
             elif i == "3":
                 self.show_employer()
             elif i == "4":
-                self.start()
+                return
                 # Exit the current panel and return to the previous caller, 
                 # avoiding unnecessary recursion or stack overflow.
             else:

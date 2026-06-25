@@ -75,7 +75,7 @@ class EmployerPanel:
             elif i == "8":
                 self.show_trains()
             elif i == "9":
-                self.start()
+                return
             else:
                 print("Dari Eshatebah Mizani Dadash")
 
