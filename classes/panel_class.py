@@ -661,7 +661,7 @@ class Panel:
             
             if passenger_auth["status"]:
                 print(passenger_auth["message"])
-                self.passenger_login_panel()
+                self.passenger_panel()
             else:
                 print(passenger_auth["message"])
                 return
