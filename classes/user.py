@@ -26,6 +26,7 @@ class Passenger(User):
         super().__init__(username,password,"passenger")
         self.name = name
         self.email = email
+        self.wallet = 0
         self.card = []
        
         
