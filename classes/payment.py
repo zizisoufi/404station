@@ -5,7 +5,50 @@ from classes.user import Passenger
 class PaymentService:
     def __init__(self) -> None:
         self.bank = API()
+    
+    def _get_card_for_payment(self, passenger):
+        if passenger.cards:
+            print("1. use saved card")
+            print("2. add new card")
+            choice = input("choose: ").strip()
+            
+            if choice == "1":
+                return self._choose_saved_Card(passenger), False
+            if choice == "2":
+                return self._read_new_card(), True
+            
+            print("invalid choice")
+            return None, False
+    
+         
+    def _read_new_card(self):
+        try:
+            card_number = input("Card Number: ").strip()
+            exp_month = int(input("Card Number: ").strip())
+            exp_year = int(input("Card Number: ").strip())
+            password = input("Card Number: ").strip()
+            cvv2 = input("Card Number: ").strip()
+            
+            
+            return Card(card_number, exp_month, exp_year, password, cvv2)
+        except ValueError:
+            print("invalid card")
+            return None
+    
+    def _choose_saved_Card(self, passenger):
+        if not passenger.cards:
+            print("you dont have any card")
+            return None
+        self.show_my_card(passenger)
         
+        try:
+            choice = int(input("choose card number: ").strip())
+            if 1 <= choice <= len(passenger.cards):
+                return passenger.cards[choice -1]
+        except ValueError:
+            pass
+        print("invalid card choice")
+    
     def charge_wallet(self, passenger):
         print("\nCharge Walllet")
         
@@ -37,35 +80,7 @@ class PaymentService:
             print("your balance is not enough")
             return False 
         passenger.wallet -= amount
-
-    def _read_new_card(self):
-        try:
-            card_number = input("Card Number: ").strip()
-            exp_month = int(input("Card Number: ").strip())
-            exp_year = int(input("Card Number: ").strip())
-            password = input("Card Number: ").strip()
-            cvv2 = input("Card Number: ").strip()
-            
-            
-            return Card(card_number, exp_month, exp_year, password, cvv2)
-        except ValueError:
-            print("invalid card")
-            return None
     
-    def _choose_saved_Card(self, passenger):
-        if not passenger.cards:
-            print("you dont have any card")
-            return None
-        self.show_my_card(passenger)
-        
-        try:
-            choice = int(input("choose card number: ").strip())
-            if 1 <= choice <= len(passenger.cards):
-                return passenger.cards[choice -1]
-        except ValueError:
-            pass
-        print("invalid card choice")
-        
         
     def show_wallet_balance(self, passenger):
         print("\nWallet Balance")
