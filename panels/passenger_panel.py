@@ -72,9 +72,9 @@ class PassengerPanel:
     def passenger_dashboard(self,passenger):
         while True:
             print("\n--- Passenger Dashboard ---")
-            print("1. But Ticket")
+            print("1. Buy Ticket")
             print("2. Update Profile")
-            print("3. Charge Wallet")
+            print("3. Wallet / My Cards")
             print("4. Back")
 
             i = input("Mikhay koja beri? ").strip()
@@ -84,8 +84,29 @@ class PassengerPanel:
             elif i == "2":
                 pass
             elif i == "3":
+                self.wallet_panel(passenger)                
+            elif i == "4":
+                return
+            else:
+                print("Dadash dari eshtebah mizani")
+
+    def wallet_panel(sels,passenger):
+        while True:
+            print("\n--- Passenger Dashboard ---")
+            print("1. My Cards")
+            print("2. Charge WAllet")
+            print("3. Balance")
+            print("4. Back")
+
+            i = input("kodomo mikhay angam bedi? ").strip()
+
+            if i == "1":
+                pass
+            elif i == "2":
                 payment_service = PaymentService()
-                payment_service.charge_wallet(passenger)                
+                payment_service.charge_wallet(passenger)
+            elif i == "3":
+                payment_service.show_wallet_balance(passenger)               
             elif i == "4":
                 return
             else:
