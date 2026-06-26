@@ -1,11 +1,14 @@
 from classes.user import Passenger
 from utilitys import backButton
+from classes.payment import PaymentService
+from database.database import DataBase
 
 
 class PassengerPanel:
     def __init__(self, database, authentication):
         self.db = database
-        self.auth = authentication      
+        self.auth = authentication  
+             
 
     def passenger_panel(self):
         while True:
@@ -19,9 +22,9 @@ class PassengerPanel:
             if i == "1":
                 self.register_passenger()
             elif i == "2":
-                self.register_passenger()
+                self.passenger_login_panel()
             elif i == "3":
-                self.start()
+                return
             else:
                 print("Dadash dari eshtebah mizani")
                          
@@ -40,7 +43,7 @@ class PassengerPanel:
             passenger_auth = self.auth.login(username, password, "passenger")
             if passenger_auth["status"]:
                 print(passenger_auth["message"])
-                self.passenger_dashboard()
+                self.passenger_dashboard(passenger_auth["obj"])
             else:
                 print(passenger_auth["message"])
                 attempts += 1
@@ -67,11 +70,12 @@ class PassengerPanel:
                 print(passenger_auth["message"])
                 return
                 
-    def passenger_dashboard(self):
+    def passenger_dashboard(self,passenger):
         while True:
             print("\n--- Passenger Dashboard ---")
-            print("1. But Ticket")
+            print("1. Buy Ticket")
             print("2. Update Profile")
+            print("3. Wallet / My Cards")
             print("4. Back")
 
             i = input("Mikhay koja beri? ").strip()
@@ -81,6 +85,32 @@ class PassengerPanel:
             elif i == "2":
                 pass
             elif i == "3":
+                self.wallet_panel(passenger)                
+            elif i == "4":
                 return
             else:
                 print("Dadash dari eshtebah mizani")
+
+    def wallet_panel(self,passenger):
+        while True:
+            print("\n--- Passenger Dashboard ---")
+            print("1. My Cards")
+            print("2. Charge Wallet")
+            print("3. Balance")
+            print("4. Back")
+
+            i = input("kodomo mikhay angam bedi? ").strip()
+
+            payment = PaymentService()
+
+            if i == "1":
+                payment.show_my_cards(passenger)
+            elif i == "2":
+                payment.charge_wallet(passenger)
+            elif i == "3":
+                payment.show_wallet_balance(passenger)               
+            elif i == "4":
+                return
+            else:
+                print("Dadash dari eshtebah mizani")
+                
