@@ -1,4 +1,5 @@
 from classes.user import Passenger
+from classes.payment import PaymentService
 from utilitys import backButton, print_file
 from classes.ticket import Ticket
 class PassengerPanel:
@@ -20,7 +21,7 @@ class PassengerPanel:
             elif i == "2":
                 self.passenger_login_panel()
             elif i == "3":
-                self.start()
+                return
             else:
                 print("Dadash dari eshtebah mizani")
                          
@@ -40,7 +41,7 @@ class PassengerPanel:
             if passenger_auth["status"]:
                 print(passenger_auth["message"])
                 self.coocke["username"] = username
-                self.passenger_dashboard()
+                self.passenger_dashboard(passenger_auth["obj"])
             else:
                 print(passenger_auth["message"])
                 attempts += 1
@@ -66,30 +67,29 @@ class PassengerPanel:
             else:
                 print(passenger_auth["message"])
                 return
-        else:
-            if backButton.back("dost dari dobare bezani? (Y/n) "):
-                self.register_passenger()
-            else:
-                self.passenger_panel()              
-    def passenger_dashboard(self):
+                
+    def passenger_dashboard(self,passenger):
         while True:
             print("\n--- Passenger Dashboard ---")
             print("1. Buy Ticket")
             print("2. Update Profile")
+            print("3. Wallet / My Cards")
             print("4. Back")
 
             i = input("Mikhay koja beri? ").strip()
 
             if i == "1":
-                self.buy_ticket()
+                self.buy_ticket(passenger)
             elif i == "2":
                 pass
             elif i == "3":
+                self.wallet_panel(passenger)                
+            elif i == "4":
                 return
             else:
                 print("Dadash dari eshtebah mizani")
 
-    def buy_ticket(self):
+    def buy_ticket(self,passenger):
         print("\n--- BUY Panel ---")
 
         all_lines = self.db.read_all_data("lines")
@@ -97,7 +97,7 @@ class PassengerPanel:
         
         if len(all_lines) < 1:
             print("hanoz beliti baray frosh nist :)")
-            self.passenger_dashboard()
+            self.passenger_dashboard(passenger)
 
         try:
             for line in all_lines:
@@ -108,7 +108,7 @@ class PassengerPanel:
                 print("The information of all existed trains in the existed_trains.txt file was saved.")
         except Exception as e:
             print(f"khataaaa!: {e}")
-            self.passenger_dashboard()
+            self.passenger_dashboard(passenger)
 
         #check the train name is exist in existed train 
         all_train_names = [train.name for train in all_trains]
@@ -122,13 +122,13 @@ class PassengerPanel:
                         flag = False
                 else:
                     flag = False
-                    self.passenger_dashboard()
+                    self.passenger_dashboard(passenger)
 
         #find train name by the input of the user
         train = [train for train in all_trains if train.name == train_name]
         if int(train[0].capacity) < 1:
             print(f"ghatar {train[0].name} zarfiyati nadarad")
-            self.passenger_dashboard()
+            self.passenger_dashboard(passenger)
 
         line = self.db.read("lines",train[0].line)
 
@@ -144,27 +144,59 @@ class PassengerPanel:
                             flag = False
                     else:
                         flag = False
-                        self.passenger_dashboard()
+                        self.passenger_dashboard(passenger)
                 
             self.db.update_data("trains",train[0].id,"capacity",int(train[0].capacity)-count_ticket)
             try:
 
+                #impliment payment
+                invoice = train[0].ticket_cost * count_ticket
+                payment = PaymentService()
+                purchase = payment.pay_from_wallet(amount=invoice,passenger=passenger)
+
+                #if payment is failed we return user to the passenger dashboard
+                if purchase == False:
+                    self.passenger_dashboard(passenger)
+
                 ticket = Ticket(username=self.coocke["username"],train_name=train[0].name,origin=line.origin,destination=line.destination,ticket_cost=train[0].ticket_cost,amount=count_ticket)
             except Exception as e:
                 print(f"khataaa: {e}")
-                self.passenger_dashboard()
+                self.passenger_dashboard(passenger)
             
-            #here payment should implement
+            
 
             is_printed = print_file.save_to_file("ticket.txt",username=ticket.username,train_name=ticket.train_name,origin=ticket.origin,destination=ticket.destination,ticket_cost=ticket.ticket_cost,count_ticket=ticket.amount,data=ticket.time)
             if is_printed:
                 print("your ticket has successfuley been created")
-                self.passenger_dashboard()
+                self.passenger_dashboard(passenger)
             else:
                 print("We had a problem when creating the ticket.")
-                self.passenger_dashboard()
+                self.passenger_dashboard(passenger)
 
         except Exception as e:
             print(f"khataaa: {e}")
-            self.passenger_dashboard()
+            self.passenger_dashboard(passenger)
         
+    def wallet_panel(self,passenger):
+        while True:
+            print("\n--- Passenger Dashboard ---")
+            print("1. My Cards")
+            print("2. Charge Wallet")
+            print("3. Balance")
+            print("4. Back")
+
+            i = input("kodomo mikhay angam bedi? ").strip()
+
+            payment = PaymentService()
+
+            if i == "1":
+                payment.show_my_cards(passenger)
+            elif i == "2":
+                payment.charge_wallet(passenger)
+            elif i == "3":
+                payment.show_wallet_balance(passenger)               
+            elif i == "4":
+                return
+            else:
+                print("Dadash dari eshtebah mizani")
+                
