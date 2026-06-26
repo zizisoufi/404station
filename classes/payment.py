@@ -32,10 +32,17 @@ class PaymentService:
         except ValueError as error:
             print("payment failed:", error)
     
+    def pay_from_wallet(self,amount,passenger):
+        if passenger.wallet < amount:
+            print("your balance is not enough")
+            return False 
+        passenger.wallet -= amount
+
+
     def show_wallet_balance(self, passenger):
         print("\nWallet Balance")
         print(f"your walllet amount is {passenger.wallet}")
-    
+        
     
          
             
