@@ -109,9 +109,7 @@ class PaymentService:
         print("\nWallet Balance")
         print(f"your walllet amount is {passenger.wallet}")
     
-    def show_my_card(self, passenger):
-        return passenger.cards
-        
+  
     
          
             

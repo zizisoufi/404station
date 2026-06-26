@@ -7,7 +7,8 @@ from database.database import DataBase
 class PassengerPanel:
     def __init__(self, database, authentication):
         self.db = database
-        self.auth = authentication      
+        self.auth = authentication  
+             
 
     def passenger_panel(self):
         while True:
@@ -94,18 +95,20 @@ class PassengerPanel:
         while True:
             print("\n--- Passenger Dashboard ---")
             print("1. My Cards")
-            print("2. Charge WAllet")
+            print("2. Charge Wallet")
             print("3. Balance")
             print("4. Back")
 
             i = input("kodomo mikhay angam bedi? ").strip()
 
+            payment = PaymentService()
+
             if i == "1":
-                pass
+                payment.show_my_cards(passenger)
             elif i == "2":
-                pass
+                payment.charge_wallet(passenger)
             elif i == "3":
-                pass               
+                payment.show_wallet_balance(passenger)               
             elif i == "4":
                 return
             else:
