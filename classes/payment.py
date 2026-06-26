@@ -6,20 +6,22 @@ class PaymentService:
     def __init__(self) -> None:
         self.bank = API()
     
-    def _get_card_for_payment(self, passenger):
-        if passenger.cards:
-            print("1. use saved card")
-            print("2. add new card")
-            choice = input("choose: ").strip()
-            
-            if choice == "1":
-                return self._choose_saved_Card(passenger), False
-            if choice == "2":
-                return self._read_new_card(), True
-            
-            print("invalid choice")
-            return None, False
+    def show_my_cards(self, passenger):
+        print("\nMy Cards")
+        if not passenger.cards:
+            print("No saved cards yet")
+            return    
     
+    def _read_amount(self):
+        try:
+            amount = int(input("amount: ").strip())
+            if amount <= 0:
+                print("amount not be 0 ")
+                return None
+            return amount
+        except ValueError:
+            ("amount not valid")
+            return None
          
     def _read_new_card(self):
         try:
@@ -34,7 +36,23 @@ class PaymentService:
         except ValueError:
             print("invalid card")
             return None
-    
+        
+        
+    def _get_card_for_payment(self, passenger):
+        if passenger.cards:
+            print("1. use saved card")
+            print("2. add new card")
+            choice = input("choose: ").strip()
+            
+            if choice == "1":
+                return self._choose_saved_Card(passenger), False
+            if choice == "2":
+                return self._read_new_card(), True
+            
+            print("invalid choice")
+            return None, False
+        
+        
     def _choose_saved_Card(self, passenger):
         if not passenger.cards:
             print("you dont have any card")
